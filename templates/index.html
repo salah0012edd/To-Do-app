@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To do List</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
+</head>
+<body>
+    <!-- Add Todo-->
+    <h1>Enter Task</h1>
+    <form action="{{ url_for('add_todo') }}" method="POST" class="input-container">
+        <input type="text" placeholder="Title" id="todo-input" name="title">
+        <br>
+        <input type="date" placeholder="Date" id="todo-input" name="date">
+        <br>
+        <textarea name="description" placeholder="description" id="description" cols="30" rows="5"></textarea>
+        <br>
+        <button type="submit" class="btn">Add</button>
+    </form>
+
+    <!-- Task List -->
+    <div class="todo-container">
+        <h1>To-Do</h1>
+        {% for todo in todoe %}
+        
+        <div class="todo-item">
+            <div class="todo-content">
+                <span class="bullet">•</span>
+                <div class="todo-text">
+                    <h3>{{ todo["title"] }}</h3>
+                    <p>{{ todo["description"] }}</p>
+                </div>
+                <div class="todo-date">
+                    {{ todo["date"] }} 
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="todo-actions">
+                <form action="{{ url_for('update_todo', id=todo['id']) }}" method="POST">
+                    <select name="status" class="option" onchange="this.form.submit()">
+                        <option class="pending" value="pendin" {% if todo['status'] == 'pending' %}selected{% endif %}>Pending</option>
+                        <option class="completed" value="completed" {% if todo['status'] == 'completed' %}selected{% endif %}>Completed</option>
+                    </select>
+                </form>
+                <a href="{{ url_for('delete_todo', id=todo['id']) }}" class="delete-btn">Delete</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+</body>
+</html>
